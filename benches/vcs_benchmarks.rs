@@ -116,8 +116,8 @@ mod vc_benches {
         vc_yy.commit_and_precompute(&val_yy);
 
         let chks_I:Vec<usize> = (0..opn_sz).collect();
-        let (bbf_opn_vals, bbf_opn_I) = flatten_chunks(&val_bbf, &chks_I, chunk_sz);
-        let yy_opn_vals = collect_chunks(&val_bbf, &chks_I, chunk_sz);
+        let (bbf_opn_vals, bbf_opn_I) = yinyan::flatten_chunks(&val_bbf, &chks_I, chunk_sz);
+        let yy_opn_vals = yinyan::collect_chunks(&val_bbf, &chks_I, chunk_sz);
 
         // Run Open benchmarks
         {

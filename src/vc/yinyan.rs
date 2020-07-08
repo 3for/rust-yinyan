@@ -701,7 +701,8 @@ impl<'a, A: 'a + UniversalAccumulator + BatchedAccumulator + FromParts> StaticVe
                     //let   g = tmp.modpow(&two, &modulus);
                     (
                         A::from_parts(modulus.clone(), g.modpow(&r0, &modulus)),
-                        A::from_parts(modulus.clone(), g.modpow(&r1, &modulus)),
+                        //A::from_parts(modulus.clone(), g.modpow(&r1, &modulus)),
+                        A::from_parts(modulus.clone(), g.modpow(&r0, &modulus)),
                     )
                 })
                 .collect(),
@@ -920,14 +921,15 @@ mod tests {
 
         // Set up vector commitment
         let mut rng = ChaChaRng::from_seed([0u8; 32]);
+        let vec_len:usize = 4;
 
         let config = Config {
             lambda: 128,
             k: 2,
             n: 1024,
             precomp_l: 1,
-            size: 4,
-            ph: Rc::new(PrimeHash::init(4))
+            size: vec_len.clone(),
+            ph: Rc::new(PrimeHash::init(vec_len.clone()))
         };
 
         let ph:&PrimeHash = &config.ph;
@@ -980,7 +982,7 @@ mod tests {
 
         // Reject a proof if we have a different specialization
         let mut vc_fake = vc.clone();
-        vc_fake.re_specialize(val.len() + 1);
+        vc_fake.re_specialize(val.len() - 1);
         assert!(
             !vc_fake.verify(&vec![true, true], 2, &proof),
             "union proof should not verify"
